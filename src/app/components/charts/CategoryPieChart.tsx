@@ -100,7 +100,7 @@ const renderCustomizedLabel = ({
   );
 };
 
-export const CategoryPieChart = ({ data }: CategoryPieChartProps) => {
+const CategoryPieChartComponent = ({ data }: CategoryPieChartProps) => {
   if (!data || data.length === 0) {
     return (
       <Card>
@@ -157,3 +157,6 @@ export const CategoryPieChart = ({ data }: CategoryPieChartProps) => {
     </Card>
   );
 };
+
+// Memoized to avoid unnecessary re-renders when parent components update without data change
+export const CategoryPieChart = React.memo(CategoryPieChartComponent);

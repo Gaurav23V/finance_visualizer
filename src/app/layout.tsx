@@ -10,6 +10,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { Geist_Mono } from 'next/font/google';
 import { Geist } from 'next/font/google';
 import './globals.css';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { PageTransition } from './components/PageTransition';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -105,7 +107,11 @@ export default function RootLayout({
             </div>
           </header>
           <main className='flex-1'>
-            <div className='container mx-auto px-4 py-6'>{children}</div>
+            <ErrorBoundary>
+              <PageTransition>
+                <div className='container mx-auto px-4 py-6'>{children}</div>
+              </PageTransition>
+            </ErrorBoundary>
           </main>
           <Toaster />
         </div>

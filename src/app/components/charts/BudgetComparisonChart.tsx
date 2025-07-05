@@ -19,19 +19,19 @@ interface BudgetComparisonChartProps {
   data: BudgetSummary[];
 }
 
-export function BudgetComparisonChart({ data }: BudgetComparisonChartProps) {
-    if (!data || data.length === 0) {
-        return (
-            <Card>
-                <CardHeader>
-                    <CardTitle>Budget vs. Actual</CardTitle>
-                </CardHeader>
-                <CardContent className="h-[400px] flex items-center justify-center">
-                    <p className="text-muted-foreground">No budget data to display for this period.</p>
-                </CardContent>
-            </Card>
-        );
-    }
+const BudgetComparisonChartComponent = ({ data }: BudgetComparisonChartProps) => {
+  if (!data || data.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Budget vs. Actual</CardTitle>
+        </CardHeader>
+        <CardContent className="h-[400px] flex items-center justify-center">
+          <p className="text-muted-foreground">No budget data to display for this period.</p>
+        </CardContent>
+      </Card>
+    );
+  }
   const chartData = data.map(item => ({
     name: item.category,
     Budget: item.amount,
@@ -69,4 +69,6 @@ export function BudgetComparisonChart({ data }: BudgetComparisonChartProps) {
       </CardContent>
     </Card>
   );
-} 
+};
+
+export const BudgetComparisonChart = React.memo(BudgetComparisonChartComponent); 

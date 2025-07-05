@@ -102,7 +102,7 @@ export function TransactionForm({
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: initialData ? Math.abs(initialData.amount) : undefined,
+      amount: initialData ? Math.abs(initialData.amount) : '',
       date: initialData ? new Date(initialData.date) : new Date(),
       description: initialData ? initialData.description : '',
       type: initialData
@@ -110,7 +110,7 @@ export function TransactionForm({
           ? 'income'
           : 'expense'
         : 'expense',
-      category: initialData ? initialData.category : undefined,
+      category: initialData ? initialData.category : '',
     },
   });
 

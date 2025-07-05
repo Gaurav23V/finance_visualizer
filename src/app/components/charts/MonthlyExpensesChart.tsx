@@ -11,12 +11,13 @@ import {
 } from 'recharts';
 import { MonthlyAggregation } from '@/lib/utils/analytics';
 import { formatCurrency } from '@/lib/utils/format';
+import React from 'react';
 
 interface MonthlyExpensesChartProps {
   data: MonthlyAggregation[];
 }
 
-export const MonthlyExpensesChart = ({ data }: MonthlyExpensesChartProps) => {
+const MonthlyExpensesChartComponent = ({ data }: MonthlyExpensesChartProps) => {
   if (data.length === 0) {
     return (
       <div className='text-center text-muted-foreground'>
@@ -39,3 +40,5 @@ export const MonthlyExpensesChart = ({ data }: MonthlyExpensesChartProps) => {
     </ResponsiveContainer>
   );
 };
+
+export const MonthlyExpensesChart = React.memo(MonthlyExpensesChartComponent);

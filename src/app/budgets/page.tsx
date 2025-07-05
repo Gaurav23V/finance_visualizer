@@ -17,7 +17,7 @@ import { generateSpendingInsights, Insight } from '@/lib/utils/insights';
 import { MonthYearSelector } from '@/app/components/ui/MonthYearSelector';
 import { BudgetForm } from '@/app/components/forms/BudgetForm';
 import { BudgetList } from '@/app/components/BudgetList';
-import { LoadingSpinner } from '@/app/components/ui/LoadingSpinner';
+import { BudgetListSkeleton } from '@/app/components/skeletons/BudgetListSkeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatCurrency } from '@/lib/utils/format';
 import { BudgetComparisonChart } from '../components/charts/BudgetComparisonChart';
@@ -189,9 +189,7 @@ export default function BudgetsPage() {
 
       <section>
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <LoadingSpinner className="h-8 w-8" />
-          </div>
+          <BudgetListSkeleton />
         ) : error ? (
           <div className="text-center text-red-500 py-8">{error}</div>
         ) : (

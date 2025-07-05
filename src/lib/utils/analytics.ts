@@ -12,6 +12,15 @@ export interface CategoryAggregation {
   total: number;
 }
 
+/**
+ * Aggregates a list of transactions per calendar month, separating income
+ * and expenses so they can be visualised independently on charts.
+ *
+ * We normalise each transaction date to an `yyyy-MM` string – this gives us a
+ * stable key we can sort on later. Positive amounts are treated as income,
+ * negative amounts as expenses (stored as absolute values for easier chart
+ * stacking).
+ */
 export const aggregateTransactionsByMonth = (
   transactions: TransactionDocument[]
 ): MonthlyAggregation[] => {
