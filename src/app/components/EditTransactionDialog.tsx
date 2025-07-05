@@ -50,4 +50,4 @@ export function EditTransactionDialog({
       </DialogContent>
     </Dialog>
   );
-} 
+}

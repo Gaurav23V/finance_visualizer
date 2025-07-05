@@ -17,21 +17,25 @@ interface MonthlyExpensesChartProps {
 }
 
 export const MonthlyExpensesChart = ({ data }: MonthlyExpensesChartProps) => {
-    if (data.length === 0) {
-        return <div className="text-center text-muted-foreground">No data to display.</div>;
-    }
+  if (data.length === 0) {
+    return (
+      <div className='text-center text-muted-foreground'>
+        No data to display.
+      </div>
+    );
+  }
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width='100%' height={300}>
       <BarChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="month" />
-        <YAxis tickFormatter={(value) => formatCurrency(value as number)} />
+        <CartesianGrid strokeDasharray='3 3' />
+        <XAxis dataKey='month' />
+        <YAxis tickFormatter={value => formatCurrency(value as number)} />
         <Tooltip
-          formatter={(value) => [formatCurrency(value as number), 'Expenses']}
+          formatter={value => [formatCurrency(value as number), 'Expenses']}
         />
-        <Bar dataKey="expenses" fill="#ef4444" />
+        <Bar dataKey='expenses' fill='#ef4444' />
       </BarChart>
     </ResponsiveContainer>
   );
-}; 
+};

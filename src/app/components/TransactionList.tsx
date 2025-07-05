@@ -32,7 +32,7 @@ export function TransactionList({
 
   if (transactions.length === 0) {
     return (
-      <div className="text-center text-muted-foreground mt-8">
+      <div className='text-center text-muted-foreground mt-8'>
         No transactions found.
       </div>
     );
@@ -40,39 +40,56 @@ export function TransactionList({
 
   if (isDesktop) {
     return (
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Description</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-              <TableHead className="w-[120px] text-right">Actions</TableHead>
+              <TableHead className='text-right'>Amount</TableHead>
+              <TableHead className='w-[120px] text-right'>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {transactions.map((transaction) => (
+            {transactions.map(transaction => (
               <TableRow key={transaction._id}>
-                <TableCell className="font-medium">{transaction.description}</TableCell>
+                <TableCell className='font-medium'>
+                  {transaction.description}
+                </TableCell>
                 <TableCell>
-                  <Badge variant="outline">{transaction.category || 'Other'}</Badge>
+                  <Badge variant='outline'>
+                    {transaction.category || 'Other'}
+                  </Badge>
                 </TableCell>
                 <TableCell>{formatDate(transaction.date)}</TableCell>
-                <TableCell className={cn("text-right font-medium", getAmountColor(transaction.amount))}>
+                <TableCell
+                  className={cn(
+                    'text-right font-medium',
+                    getAmountColor(transaction.amount)
+                  )}
+                >
                   {formatCurrency(transaction.amount)}
                 </TableCell>
-                <TableCell className="text-right">
-                    <div className="flex items-center justify-end space-x-2">
-                        <Button variant="ghost" size="icon" onClick={() => onEdit(transaction)}>
-                            <Edit className="h-4 w-4" />
-                            <span className="sr-only">Edit</span>
-                        </Button>
-                        <Button variant="ghost" size="icon" onClick={() => onDelete(transaction)}>
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                            <span className="sr-only">Delete</span>
-                        </Button>
-                    </div>
+                <TableCell className='text-right'>
+                  <div className='flex items-center justify-end space-x-2'>
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      onClick={() => onEdit(transaction)}
+                    >
+                      <Edit className='h-4 w-4' />
+                      <span className='sr-only'>Edit</span>
+                    </Button>
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      onClick={() => onDelete(transaction)}
+                    >
+                      <Trash2 className='h-4 w-4 text-destructive' />
+                      <span className='sr-only'>Delete</span>
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -83,8 +100,8 @@ export function TransactionList({
   }
 
   return (
-    <div className="space-y-4">
-      {transactions.map((transaction) => (
+    <div className='space-y-4'>
+      {transactions.map(transaction => (
         <TransactionCard
           key={transaction._id}
           transaction={transaction}
@@ -94,4 +111,4 @@ export function TransactionList({
       ))}
     </div>
   );
-} 
+}

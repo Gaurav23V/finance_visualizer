@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -56,7 +55,7 @@ const formSchema = z.object({
     message: 'Description must be at least 3 characters.',
   }),
   category: z.custom<TransactionCategory>(
-    (val) => TRANSACTION_CATEGORIES.includes(val as TransactionCategory),
+    val => TRANSACTION_CATEGORIES.includes(val as TransactionCategory),
     {
       message: 'Please select a valid category.',
     }
@@ -82,7 +81,7 @@ export function TransactionForm({
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: initialData ? Math.abs(initialData.amount) : ('' as any),
+      amount: initialData ? Math.abs(initialData.amount) : undefined,
       date: initialData ? new Date(initialData.date) : new Date(),
       description: initialData ? initialData.description : '',
       type: initialData
@@ -121,20 +120,20 @@ export function TransactionForm({
 
   const availableCategories =
     transactionType === 'income'
-      ? TRANSACTION_CATEGORIES.filter((c) => c === 'Income/Salary')
-      : TRANSACTION_CATEGORIES.filter((c) => c !== 'Income/Salary');
+      ? TRANSACTION_CATEGORIES.filter(c => c === 'Income/Salary')
+      : TRANSACTION_CATEGORIES.filter(c => c !== 'Income/Salary');
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-8'>
         <FormField
           control={form.control}
-          name="description"
+          name='description'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., Groceries" {...field} />
+                <Input placeholder='e.g., Groceries' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -143,28 +142,42 @@ export function TransactionForm({
 
         <FormField
           control={form.control}
-          name="amount"
+          name='amount'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="0.00" {...field} />
+                <Input type='number' placeholder='0.00' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
-          name="type"
+          name='type'
           render={({ field }) => (
-            <FormItem className="space-y-3">
+            <FormItem className='space-y-3'>
               <FormLabel>Type</FormLabel>
               <FormControl>
-                <div className="flex items-center space-x-4">
-                    <Button type="button" variant={field.value === 'expense' ? 'destructive' : 'outline'} onClick={() => field.onChange('expense')}>Expense</Button>
-                    <Button type="button" variant={field.value === 'income' ? 'default' : 'outline'} onClick={() => field.onChange('income')}>Income</Button>
+                <div className='flex items-center space-x-4'>
+                  <Button
+                    type='button'
+                    variant={
+                      field.value === 'expense' ? 'destructive' : 'outline'
+                    }
+                    onClick={() => field.onChange('expense')}
+                  >
+                    Expense
+                  </Button>
+                  <Button
+                    type='button'
+                    variant={field.value === 'income' ? 'default' : 'outline'}
+                    onClick={() => field.onChange('income')}
+                  >
+                    Income
+                  </Button>
                 </div>
               </FormControl>
               <FormMessage />
@@ -174,18 +187,18 @@ export function TransactionForm({
 
         <FormField
           control={form.control}
-          name="category"
+          name='category'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
+                    <SelectValue placeholder='Select a category' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {availableCategories.map((category) => (
+                  {availableCategories.map(category => (
                     <SelectItem key={category} value={category}>
                       {category}
                     </SelectItem>
@@ -199,9 +212,9 @@ export function TransactionForm({
 
         <FormField
           control={form.control}
-          name="date"
+          name='date'
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem className='flex flex-col'>
               <FormLabel>Date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -218,16 +231,16 @@ export function TransactionForm({
                       ) : (
                         <span>Pick a date</span>
                       )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className='w-auto p-0' align='start'>
                   <Calendar
-                    mode="single"
+                    mode='single'
                     selected={field.value}
                     onSelect={field.onChange}
-                    disabled={(date) =>
+                    disabled={date =>
                       date > new Date() || date < new Date('1900-01-01')
                     }
                     initialFocus
@@ -238,13 +251,11 @@ export function TransactionForm({
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <LoadingSpinner size={16} className="mr-2" />
-          ) : null}
+        <Button type='submit' disabled={isSubmitting}>
+          {isSubmitting ? <LoadingSpinner size={16} className='mr-2' /> : null}
           {initialData ? 'Update Transaction' : 'Create Transaction'}
         </Button>
       </form>
     </Form>
   );
-} 
+}

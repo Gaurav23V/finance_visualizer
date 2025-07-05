@@ -10,4 +10,4 @@ export const TRANSACTION_CATEGORIES = [
   'Other',
 ] as const;
 
-export type TransactionCategory = (typeof TRANSACTION_CATEGORIES)[number]; 
+export type TransactionCategory = (typeof TRANSACTION_CATEGORIES)[number];

@@ -18,4 +18,4 @@ export function useMediaQuery(query: string) {
   }, [query]);
 
   return value;
-} 
+}

@@ -15,9 +15,10 @@ export interface CategoryAggregation {
 export const aggregateTransactionsByMonth = (
   transactions: TransactionDocument[]
 ): MonthlyAggregation[] => {
-  const monthlyData: { [key: string]: { income: number; expenses: number } } = {};
+  const monthlyData: { [key: string]: { income: number; expenses: number } } =
+    {};
 
-  transactions.forEach((transaction) => {
+  transactions.forEach(transaction => {
     const monthKey = format(new Date(transaction.date), 'yyyy-MM');
     if (!monthlyData[monthKey]) {
       monthlyData[monthKey] = { income: 0, expenses: 0 };
@@ -43,8 +44,8 @@ export const aggregateExpensesByCategory = (
   const categoryData: { [key: string]: number } = {};
 
   transactions
-    .filter((t) => t.amount < 0) // Only consider expenses
-    .forEach((transaction) => {
+    .filter(t => t.amount < 0) // Only consider expenses
+    .forEach(transaction => {
       const category = transaction.category || 'Other';
       const amount = Math.abs(transaction.amount);
 
@@ -65,19 +66,23 @@ export const aggregateExpensesByCategory = (
 export const getMonthlySummary = (
   transactions: Transaction[]
 ): { totalIncome: number; totalExpenses: number; net: number } => {
-    const now = new Date();
-    const currentMonthTransactions = transactions.filter(t => new Date(t.date).getMonth() === now.getMonth() && new Date(t.date).getFullYear() === now.getFullYear());
+  const now = new Date();
+  const currentMonthTransactions = transactions.filter(
+    t =>
+      new Date(t.date).getMonth() === now.getMonth() &&
+      new Date(t.date).getFullYear() === now.getFullYear()
+  );
 
-    return currentMonthTransactions.reduce(
-        (acc, transaction) => {
-            if (transaction.amount > 0) {
-                acc.totalIncome += transaction.amount;
-            } else {
-                acc.totalExpenses += Math.abs(transaction.amount);
-            }
-            acc.net = acc.totalIncome - acc.totalExpenses;
-            return acc;
-        },
-        { totalIncome: 0, totalExpenses: 0, net: 0 }
-    );
-}; 
+  return currentMonthTransactions.reduce(
+    (acc, transaction) => {
+      if (transaction.amount > 0) {
+        acc.totalIncome += transaction.amount;
+      } else {
+        acc.totalExpenses += Math.abs(transaction.amount);
+      }
+      acc.net = acc.totalIncome - acc.totalExpenses;
+      return acc;
+    },
+    { totalIncome: 0, totalExpenses: 0, net: 0 }
+  );
+};

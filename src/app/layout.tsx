@@ -49,7 +49,7 @@ export default function RootLayout({
                   </span>
                 </Link>
                 <nav className='flex items-center space-x-6 text-sm font-medium'>
-                  {navLinks.map((link) => (
+                  {navLinks.map(link => (
                     <Link
                       key={link.href}
                       href={link.href}
@@ -67,14 +67,14 @@ export default function RootLayout({
               </div>
 
               <div className='flex flex-1 items-center justify-end space-x-2 md:hidden'>
-                  <Button
-                      variant='ghost'
-                      size='icon'
-                      onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  >
-                      {isMenuOpen ? <X /> : <Menu />}
-                      <span className='sr-only'>Toggle Menu</span>
-                  </Button>
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                  {isMenuOpen ? <X /> : <Menu />}
+                  <span className='sr-only'>Toggle Menu</span>
+                </Button>
               </div>
 
               <div className='hidden flex-1 items-center justify-end space-x-2 md:flex'></div>
@@ -82,7 +82,7 @@ export default function RootLayout({
               {isMenuOpen && (
                 <div className='absolute top-14 left-0 w-full bg-background/95 backdrop-blur md:hidden'>
                   <nav className='flex flex-col items-center space-y-4 py-4'>
-                    {navLinks.map((link) => (
+                    {navLinks.map(link => (
                       <Link
                         key={link.href}
                         href={link.href}

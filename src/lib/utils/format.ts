@@ -24,10 +24,7 @@ export const formatCurrency = (
  * @param locale - The locale to use for formatting.
  * @returns The formatted date string.
  */
-export const formatDate = (
-  date: Date | string,
-  locale = 'en-US'
-): string => {
+export const formatDate = (date: Date | string, locale = 'en-US'): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
@@ -60,4 +57,4 @@ export const getAmountColor = (amount: number): string => {
     return 'text-red-600 dark:text-red-400';
   }
   return 'text-gray-500 dark:text-gray-400';
-}; 
+};

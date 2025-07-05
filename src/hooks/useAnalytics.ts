@@ -18,8 +18,12 @@ export const useAnalytics = () => {
         throw new Error(data.error || 'Failed to fetch analytics data');
       }
       setAnalyticsData(data.data);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -30,4 +34,4 @@ export const useAnalytics = () => {
   }, [fetchAnalytics]);
 
   return { analyticsData, isLoading, error, refetch: fetchAnalytics };
-}; 
+};

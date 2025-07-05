@@ -10,7 +10,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 import { Transaction } from '@/types/transaction';
 import { LoadingSpinner } from '@/app/components/ui/LoadingSpinner';
 import { ErrorMessage } from './ui/ErrorMessage';
@@ -44,22 +43,25 @@ export function DeleteConfirmDialog({
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete the
             transaction: <br />
-            <strong>&quot;{transaction.description}&quot;</strong> for <strong>{transaction.amount}</strong>
+            <strong>&quot;{transaction.description}&quot;</strong> for{' '}
+            <strong>{transaction.amount}</strong>
           </AlertDialogDescription>
         </AlertDialogHeader>
         {error && <ErrorMessage message={error} />}
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose} disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={onClose} disabled={isDeleting}>
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isDeleting}
-            className="bg-destructive hover:bg-destructive/90"
+            className='bg-destructive hover:bg-destructive/90'
           >
-            {isDeleting && <LoadingSpinner size={16} className="mr-2" />}
+            {isDeleting && <LoadingSpinner size={16} className='mr-2' />}
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
-} 
+}

@@ -112,7 +112,7 @@ export async function getDatabaseHealth(): Promise<{
     return {
       connected: true,
       database: db.databaseName,
-      collections: collections.map((col) => col.name),
+      collections: collections.map(col => col.name),
     };
   } catch (error) {
     return {

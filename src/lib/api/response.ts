@@ -141,7 +141,7 @@ export class ValidationHelper {
   }
 
   // Check if field is required
-  required(value: any, field: string): boolean {
+  required(value: unknown, field: string): boolean {
     if (value === undefined || value === null || value === '') {
       this.addError(field, `${field} is required`);
       return false;
@@ -150,7 +150,7 @@ export class ValidationHelper {
   }
 
   // Validate number
-  isNumber(value: any, field: string): boolean {
+  isNumber(value: unknown, field: string): boolean {
     if (typeof value !== 'number' || isNaN(value)) {
       this.addError(field, `${field} must be a valid number`);
       return false;
@@ -160,7 +160,7 @@ export class ValidationHelper {
 
   // Validate string
   isString(
-    value: any,
+    value: unknown,
     field: string,
     minLength?: number,
     maxLength?: number
@@ -190,7 +190,15 @@ export class ValidationHelper {
   }
 
   // Validate date
-  isValidDate(value: any, field: string): boolean {
+  isValidDate(value: unknown, field: string): boolean {
+    if (
+      typeof value !== 'string' &&
+      typeof value !== 'number' &&
+      !(value instanceof Date)
+    ) {
+      this.addError(field, `${field} must be a valid date`);
+      return false;
+    }
     const date = new Date(value);
     if (isNaN(date.getTime())) {
       this.addError(field, `${field} must be a valid date`);
@@ -200,7 +208,11 @@ export class ValidationHelper {
   }
 
   // Validate if a value is one of the allowed values
-  isIn(value: any, allowedValues: readonly any[], field: string): boolean {
+  isIn(
+    value: unknown,
+    allowedValues: readonly unknown[],
+    field: string
+  ): boolean {
     if (!allowedValues.includes(value)) {
       this.addError(
         field,
@@ -214,7 +226,7 @@ export class ValidationHelper {
   }
 
   // Validate MongoDB ObjectId format
-  isValidObjectId(value: any, field: string): boolean {
+  isValidObjectId(value: unknown, field: string): boolean {
     const objectIdRegex = /^[0-9a-fA-F]{24}$/;
     if (typeof value !== 'string' || !objectIdRegex.test(value)) {
       this.addError(field, `${field} must be a valid ObjectId`);
@@ -252,61 +264,12 @@ export async function parseRequestBody<T>(
   }
 }
 
-// URL search params parser
+// Search params parser
 export function parseSearchParams(url: string): Record<string, string> {
-  const searchParams = new URL(url).searchParams;
+  const { searchParams } = new URL(url);
   const params: Record<string, string> = {};
-
-  searchParams.forEach((value, key) => {
+  for (const [key, value] of searchParams.entries()) {
     params[key] = value;
-  });
-
+  }
   return params;
-}
-
-// Convert MongoDB document to API response format
-export function formatTransactionResponse(doc: any): any {
-  if (!doc) return null;
-
-  return {
-    ...doc,
-    _id: doc._id.toString(),
-    date: doc.date.toISOString(),
-    createdAt: doc.createdAt.toISOString(),
-    updatedAt: doc.updatedAt.toISOString(),
-  };
-}
-
-// Error handler wrapper for API routes (updated for NextRequest)
-export function withErrorHandler(
-  handler: (request: NextRequest, context?: any) => Promise<NextResponse>
-) {
-  return async (request: NextRequest, context?: any): Promise<NextResponse> => {
-    try {
-      return await handler(request, context);
-    } catch (error) {
-      console.error('API Error:', error);
-
-      // Handle specific error types
-      if (error instanceof Error) {
-        if (error.message.includes('Database')) {
-          return databaseErrorResponse(error.message);
-        }
-        if (error.message.includes('Invalid ID')) {
-          return invalidIdResponse(error.message);
-        }
-        if (error.message.includes('not found')) {
-          return notFoundResponse(error.message);
-        }
-      }
-
-      // Default internal server error
-      return errorResponse(
-        'Internal server error',
-        HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        undefined,
-        ERROR_CODES.INTERNAL_ERROR
-      );
-    }
-  };
 }

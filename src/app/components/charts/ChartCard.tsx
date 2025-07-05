@@ -33,7 +33,7 @@ export const ChartCard = ({
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <Skeleton className="h-[300px] w-full" />
+          <Skeleton className='h-[300px] w-full' />
         ) : error ? (
           <ErrorMessage message={error} onRetry={onRetry} />
         ) : (
@@ -42,4 +42,4 @@ export const ChartCard = ({
       </CardContent>
     </Card>
   );
-}; 
+};

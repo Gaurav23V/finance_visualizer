@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 import { getTransactionsCollection } from '@/lib/db/mongodb';
 import {
   successResponse,
-  errorResponse,
   databaseErrorResponse,
   parseSearchParams,
 } from '@/lib/api/response';
@@ -12,7 +11,7 @@ export async function GET(request: NextRequest) {
   try {
     const url = request.url;
     const params = parseSearchParams(url);
-    
+
     const dateFrom = params.dateFrom;
     const dateTo = params.dateTo;
 
@@ -38,4 +37,4 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching analytics data:', error);
     return databaseErrorResponse('Failed to fetch analytics data');
   }
-} 
+}

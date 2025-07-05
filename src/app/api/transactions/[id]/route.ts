@@ -11,9 +11,9 @@ import {
   methodNotAllowedResponse,
   ValidationHelper,
   parseRequestBody,
-  formatTransactionResponse,
   HTTP_STATUS,
 } from '@/lib/api/response';
+import { formatTransactionResponse } from '@/lib/api/formatters';
 import {
   UpdateTransactionRequest,
   TransactionDocument,

@@ -9,9 +9,9 @@ import {
   ValidationHelper,
   parseRequestBody,
   parseSearchParams,
-  formatTransactionResponse,
   HTTP_STATUS,
 } from '@/lib/api/response';
+import { formatTransactionResponse } from '@/lib/api/formatters';
 import {
   CreateTransactionRequest,
   TransactionDocument,

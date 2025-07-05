@@ -18,8 +18,12 @@ export const useTransactions = () => {
         throw new Error(data.error || 'Failed to fetch transactions');
       }
       setTransactions(data.data.transactions);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -30,4 +34,4 @@ export const useTransactions = () => {
   }, [fetchTransactions]);
 
   return { transactions, isLoading, error, refetch: fetchTransactions };
-}; 
+};

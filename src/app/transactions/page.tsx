@@ -1,14 +1,17 @@
 'use client';
 
 import * as React from 'react';
-import { Transaction, CreateTransactionRequest, UpdateTransactionRequest } from '@/types/transaction';
+import {
+  Transaction,
+  CreateTransactionRequest,
+  UpdateTransactionRequest,
+} from '@/types/transaction';
 import { TransactionForm } from '@/app/components/forms/TransactionForm';
 import { TransactionList } from '@/app/components/TransactionList';
 import { TransactionListSkeleton } from '@/app/components/skeletons/TransactionListSkeleton';
 import { EditTransactionDialog } from '@/app/components/EditTransactionDialog';
 import { DeleteConfirmDialog } from '@/app/components/DeleteConfirmDialog';
 import { ErrorMessage } from '@/app/components/ui/ErrorMessage';
-import { Button } from '@/components/ui/button';
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
@@ -17,9 +20,11 @@ export default function TransactionsPage() {
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
-  
-  const [editingTransaction, setEditingTransaction] = React.useState<Transaction | null>(null);
-  const [deletingTransaction, setDeletingTransaction] = React.useState<Transaction | null>(null);
+
+  const [editingTransaction, setEditingTransaction] =
+    React.useState<Transaction | null>(null);
+  const [deletingTransaction, setDeletingTransaction] =
+    React.useState<Transaction | null>(null);
 
   const fetchTransactions = React.useCallback(async () => {
     setIsLoading(true);
@@ -31,8 +36,12 @@ export default function TransactionsPage() {
         throw new Error(data.error || 'Failed to fetch transactions');
       }
       setTransactions(data.data.transactions);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -42,7 +51,9 @@ export default function TransactionsPage() {
     fetchTransactions();
   }, [fetchTransactions]);
 
-  const handleCreate = async (values: CreateTransactionRequest) => {
+  const handleCreate = async (
+    values: CreateTransactionRequest | UpdateTransactionRequest
+  ) => {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
@@ -56,8 +67,12 @@ export default function TransactionsPage() {
         throw new Error(data.error || 'Failed to create transaction');
       }
       await fetchTransactions(); // Refetch all transactions
-    } catch (e: any) {
-      setSubmitError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setSubmitError(e.message);
+      } else {
+        setSubmitError('An unknown error occurred');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -68,19 +83,26 @@ export default function TransactionsPage() {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      const response = await fetch(`/api/transactions/${editingTransaction._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        `/api/transactions/${editingTransaction._id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(values),
+        }
+      );
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || 'Failed to update transaction');
       }
       await fetchTransactions(); // Refetch all transactions
       setEditingTransaction(null);
-    } catch (e: any) {
-      setSubmitError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setSubmitError(e.message);
+      } else {
+        setSubmitError('An unknown error occurred');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -91,42 +113,50 @@ export default function TransactionsPage() {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      const response = await fetch(`/api/transactions/${deletingTransaction._id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `/api/transactions/${deletingTransaction._id}`,
+        {
+          method: 'DELETE',
+        }
+      );
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || 'Failed to delete transaction');
       }
       await fetchTransactions(); // Refetch all transactions
       setDeletingTransaction(null);
-    } catch (e: any) {
-      setSubmitError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setSubmitError(e.message);
+      } else {
+        setSubmitError('An unknown error occurred');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-
   return (
-    <div className="container mx-auto p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-8">Transactions</h1>
+    <div className='container mx-auto p-4 md:p-8'>
+      <h1 className='text-3xl font-bold mb-8'>Transactions</h1>
 
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Add New Transaction</h2>
+      <div className='mb-8'>
+        <h2 className='text-2xl font-semibold mb-4'>Add New Transaction</h2>
         <TransactionForm
           onSubmit={handleCreate}
-          isSubmitting={isSubmitting && !editingTransaction && !deletingTransaction}
+          isSubmitting={
+            isSubmitting && !editingTransaction && !deletingTransaction
+          }
         />
         {submitError && !editingTransaction && !deletingTransaction && (
-          <div className="mt-4">
+          <div className='mt-4'>
             <ErrorMessage message={submitError} />
           </div>
         )}
       </div>
 
       <div>
-        <h2 className="text-2xl font-semibold mb-4">History</h2>
+        <h2 className='text-2xl font-semibold mb-4'>History</h2>
         {isLoading ? (
           <TransactionListSkeleton />
         ) : error ? (
@@ -139,7 +169,7 @@ export default function TransactionsPage() {
           />
         )}
       </div>
-      
+
       <EditTransactionDialog
         isOpen={!!editingTransaction}
         onClose={() => setEditingTransaction(null)}
@@ -159,4 +189,4 @@ export default function TransactionsPage() {
       />
     </div>
   );
-} 
+}

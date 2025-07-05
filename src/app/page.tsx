@@ -13,28 +13,26 @@ export default function HomePage() {
   const monthlySummary = getMonthlySummary(transactions);
 
   return (
-    <div className="container mx-auto p-4 md:p-8 text-center">
-      <h1 className="text-4xl font-bold mb-4">
-        Welcome to Finance Visualizer
-      </h1>
-      <p className="text-lg text-muted-foreground mb-8">
+    <div className='container mx-auto p-4 md:p-8 text-center'>
+      <h1 className='text-4xl font-bold mb-4'>Welcome to Finance Visualizer</h1>
+      <p className='text-lg text-muted-foreground mb-8'>
         Your personal finance tracking and visualization solution.
       </p>
 
       {isLoading ? (
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
-            <Skeleton className="h-36" />
-            <Skeleton className="h-36" />
-            <Skeleton className="h-36" />
+        <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto'>
+          <Skeleton className='h-36' />
+          <Skeleton className='h-36' />
+          <Skeleton className='h-36' />
         </div>
       ) : transactions.length > 0 ? (
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto mb-8">
+        <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto mb-8'>
           <Card>
             <CardHeader>
               <CardTitle>Current Month Income</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-green-600">
+              <p className='text-3xl font-bold text-green-600'>
                 {formatCurrency(monthlySummary.totalIncome)}
               </p>
             </CardContent>
@@ -44,7 +42,7 @@ export default function HomePage() {
               <CardTitle>Current Month Expenses</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-red-600">
+              <p className='text-3xl font-bold text-red-600'>
                 {formatCurrency(monthlySummary.totalExpenses)}
               </p>
             </CardContent>
@@ -54,25 +52,27 @@ export default function HomePage() {
               <CardTitle>Total Transactions</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{transactions.length}</p>
+              <p className='text-3xl font-bold'>{transactions.length}</p>
             </CardContent>
           </Card>
         </div>
       ) : (
-        <div className="mb-8">
-            <p className="text-muted-foreground mb-4">You have no transactions yet.</p>
-            <Link href="/transactions" passHref>
-                <Button>Add Your First Transaction</Button>
-            </Link>
+        <div className='mb-8'>
+          <p className='text-muted-foreground mb-4'>
+            You have no transactions yet.
+          </p>
+          <Link href='/transactions' passHref>
+            <Button>Add Your First Transaction</Button>
+          </Link>
         </div>
       )}
 
-      <div className="space-x-4">
-        <Link href="/dashboard" passHref>
-          <Button variant="outline">Go to Dashboard</Button>
+      <div className='space-x-4'>
+        <Link href='/dashboard' passHref>
+          <Button variant='outline'>Go to Dashboard</Button>
         </Link>
-        <Link href="/transactions" passHref>
-          <Button variant="outline">Manage Transactions</Button>
+        <Link href='/transactions' passHref>
+          <Button variant='outline'>Manage Transactions</Button>
         </Link>
       </div>
     </div>
