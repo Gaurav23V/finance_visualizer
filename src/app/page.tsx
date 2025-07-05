@@ -1,103 +1,128 @@
-import Image from "next/image";
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { BarChart3, PieChart, TrendingUp, Wallet } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className='flex flex-col items-center justify-center min-h-[calc(100vh-200px)] space-y-8'>
+      {/* Hero Section */}
+      <div className='text-center space-y-4 max-w-3xl mx-auto'>
+        <h1 className='text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl'>
+          Finance
+          <span className='text-primary'> Visualizer</span>
+        </h1>
+        <p className='mx-auto max-w-[700px] text-muted-foreground md:text-xl'>
+          Take control of your personal finances with powerful visualization
+          tools, budget tracking, and insightful analytics. Make informed
+          decisions about your money.
+        </p>
+        <div className='flex flex-col gap-2 min-[400px]:flex-row justify-center'>
+          <Button size='lg' className='min-[400px]:w-auto'>
+            Get Started
+          </Button>
+          <Button variant='outline' size='lg' className='min-[400px]:w-auto'>
+            View Demo
+          </Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      {/* Features Grid */}
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl mx-auto'>
+        <Card className='relative overflow-hidden'>
+          <CardHeader className='pb-2'>
+            <div className='w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-2'>
+              <Wallet className='w-5 h-5 text-primary' />
+            </div>
+            <CardTitle className='text-lg'>Transaction Tracking</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription>
+              Easily record and categorize your income and expenses with our
+              intuitive interface.
+            </CardDescription>
+          </CardContent>
+        </Card>
+
+        <Card className='relative overflow-hidden'>
+          <CardHeader className='pb-2'>
+            <div className='w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-2'>
+              <BarChart3 className='w-5 h-5 text-primary' />
+            </div>
+            <CardTitle className='text-lg'>Visual Analytics</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription>
+              Interactive charts and graphs help you understand your spending
+              patterns and trends.
+            </CardDescription>
+          </CardContent>
+        </Card>
+
+        <Card className='relative overflow-hidden'>
+          <CardHeader className='pb-2'>
+            <div className='w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-2'>
+              <PieChart className='w-5 h-5 text-primary' />
+            </div>
+            <CardTitle className='text-lg'>Budget Management</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription>
+              Set budgets for different categories and track your progress
+              throughout the month.
+            </CardDescription>
+          </CardContent>
+        </Card>
+
+        <Card className='relative overflow-hidden'>
+          <CardHeader className='pb-2'>
+            <div className='w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-2'>
+              <TrendingUp className='w-5 h-5 text-primary' />
+            </div>
+            <CardTitle className='text-lg'>Financial Insights</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription>
+              Get personalized insights and recommendations to improve your
+              financial health.
+            </CardDescription>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Stats Preview */}
+      <div className='w-full max-w-4xl mx-auto'>
+        <Card>
+          <CardHeader className='text-center'>
+            <CardTitle className='text-2xl'>
+              Ready to Transform Your Finances?
+            </CardTitle>
+            <CardDescription className='text-lg'>
+              Join thousands of users who have taken control of their financial
+              future.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='grid grid-cols-1 md:grid-cols-3 gap-8 text-center'>
+            <div>
+              <div className='text-3xl font-bold text-primary'>10K+</div>
+              <div className='text-muted-foreground'>Transactions Tracked</div>
+            </div>
+            <div>
+              <div className='text-3xl font-bold text-primary'>95%</div>
+              <div className='text-muted-foreground'>Budget Accuracy</div>
+            </div>
+            <div>
+              <div className='text-3xl font-bold text-primary'>$50K+</div>
+              <div className='text-muted-foreground'>Money Saved</div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
