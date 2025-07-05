@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { TransactionCategory } from '@/lib/constants/categories';
 
 // Core Transaction interface for MongoDB documents
 export interface Transaction {
@@ -6,6 +7,7 @@ export interface Transaction {
   amount: number; // Positive for income, negative for expenses
   date: Date;
   description: string;
+  category: TransactionCategory;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,6 +22,7 @@ export interface CreateTransactionRequest {
   amount: number;
   date: string | Date; // Accept both string and Date for flexibility
   description: string;
+  category: TransactionCategory;
 }
 
 // Transaction update payload (all fields optional except validation)
@@ -27,6 +30,7 @@ export interface UpdateTransactionRequest {
   amount?: number;
   date?: string | Date;
   description?: string;
+  category?: TransactionCategory;
 }
 
 // API Response types

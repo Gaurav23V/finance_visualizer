@@ -21,11 +21,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { LoadingSpinner } from '@/app/components/ui/LoadingSpinner';
-import { Transaction, CreateTransactionRequest } from '@/types/transaction';
+import {
+  Transaction,
+  CreateTransactionRequest,
+  UpdateTransactionRequest,
+} from '@/types/transaction';
+import {
+  TRANSACTION_CATEGORIES,
+  TransactionCategory,
+} from '@/lib/constants/categories';
 
 const formSchema = z.object({
   amount: z.coerce
@@ -40,13 +55,21 @@ const formSchema = z.object({
   description: z.string().min(3, {
     message: 'Description must be at least 3 characters.',
   }),
+  category: z.custom<TransactionCategory>(
+    (val) => TRANSACTION_CATEGORIES.includes(val as TransactionCategory),
+    {
+      message: 'Please select a valid category.',
+    }
+  ),
   type: z.enum(['income', 'expense']),
 });
 
 export type TransactionFormValues = z.infer<typeof formSchema>;
 
 interface TransactionFormProps {
-  onSubmit: (values: CreateTransactionRequest) => Promise<void>;
+  onSubmit: (
+    values: CreateTransactionRequest | UpdateTransactionRequest
+  ) => Promise<void>;
   initialData?: Transaction;
   isSubmitting?: boolean;
 }
@@ -67,16 +90,39 @@ export function TransactionForm({
           ? 'income'
           : 'expense'
         : 'expense',
+      category: initialData ? initialData.category : undefined,
     },
   });
 
+  const transactionType = form.watch('type');
+
+  React.useEffect(() => {
+    if (initialData) return; // Don't reset category if editing
+
+    if (transactionType === 'income') {
+      form.setValue('category', 'Income/Salary');
+    } else {
+      if (form.getValues('category') === 'Income/Salary') {
+        form.setValue('category', 'Other'); // Or reset to undefined
+      }
+    }
+  }, [transactionType, form, initialData]);
+
   const handleSubmit = (values: TransactionFormValues) => {
-    const amount = values.type === 'expense' ? -Math.abs(values.amount) : Math.abs(values.amount);
+    const amount =
+      values.type === 'expense'
+        ? -Math.abs(values.amount)
+        : Math.abs(values.amount);
     onSubmit({
       ...values,
       amount,
     });
   };
+
+  const availableCategories =
+    transactionType === 'income'
+      ? TRANSACTION_CATEGORIES.filter((c) => c === 'Income/Salary')
+      : TRANSACTION_CATEGORIES.filter((c) => c !== 'Income/Salary');
 
   return (
     <Form {...form}>
@@ -121,6 +167,31 @@ export function TransactionForm({
                     <Button type="button" variant={field.value === 'income' ? 'default' : 'outline'} onClick={() => field.onChange('income')}>Income</Button>
                 </div>
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {availableCategories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

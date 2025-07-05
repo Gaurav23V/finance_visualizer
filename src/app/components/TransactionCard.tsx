@@ -3,6 +3,7 @@
 import { Transaction } from '@/types/transaction';
 import { formatCurrency, formatDate, getAmountColor } from '@/lib/utils/format';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Edit, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -39,6 +40,10 @@ export const TransactionCard = ({
             <div className="flex justify-between">
                 <span className="text-muted-foreground">Date</span>
                 <span>{formatDate(transaction.date)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Category</span>
+                <Badge variant="outline">{transaction.category || 'Other'}</Badge>
             </div>
         </CardContent>
         <CardFooter className="flex justify-end space-x-2">

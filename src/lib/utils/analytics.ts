@@ -7,6 +7,11 @@ export interface MonthlyAggregation {
   expenses: number;
 }
 
+export interface CategoryAggregation {
+  category: string;
+  total: number;
+}
+
 export const aggregateTransactionsByMonth = (
   transactions: TransactionDocument[]
 ): MonthlyAggregation[] => {
@@ -30,6 +35,31 @@ export const aggregateTransactionsByMonth = (
       ...data,
     }))
     .sort((a, b) => a.month.localeCompare(b.month));
+};
+
+export const aggregateExpensesByCategory = (
+  transactions: Transaction[]
+): CategoryAggregation[] => {
+  const categoryData: { [key: string]: number } = {};
+
+  transactions
+    .filter((t) => t.amount < 0) // Only consider expenses
+    .forEach((transaction) => {
+      const category = transaction.category || 'Other';
+      const amount = Math.abs(transaction.amount);
+
+      if (!categoryData[category]) {
+        categoryData[category] = 0;
+      }
+      categoryData[category] += amount;
+    });
+
+  return Object.entries(categoryData)
+    .map(([category, total]) => ({
+      category,
+      total,
+    }))
+    .sort((a, b) => b.total - a.total); // Sort by total descending
 };
 
 export const getMonthlySummary = (

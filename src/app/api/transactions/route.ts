@@ -16,6 +16,7 @@ import {
   CreateTransactionRequest,
   TransactionDocument,
 } from '@/types/transaction';
+import { TRANSACTION_CATEGORIES } from '@/lib/constants/categories';
 
 // POST /api/transactions - Create a new transaction
 export async function POST(request: NextRequest) {
@@ -36,6 +37,7 @@ export async function POST(request: NextRequest) {
     validator.required(body.amount, 'amount');
     validator.required(body.date, 'date');
     validator.required(body.description, 'description');
+    validator.required(body.category, 'category');
 
     // Type validation
     if (body.amount !== undefined) {
@@ -48,6 +50,10 @@ export async function POST(request: NextRequest) {
 
     if (body.description !== undefined) {
       validator.isString(body.description, 'description', 1, 500);
+    }
+
+    if (body.category !== undefined) {
+      validator.isIn(body.category, TRANSACTION_CATEGORIES, 'category');
     }
 
     // Return validation errors if any
@@ -63,6 +69,7 @@ export async function POST(request: NextRequest) {
       amount: body.amount,
       date: new Date(body.date),
       description: body.description.trim(),
+      category: body.category,
       createdAt: now,
       updatedAt: now,
     };

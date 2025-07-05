@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
 import { TransactionCard } from '@/app/components/TransactionCard';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { Button } from '@/components/ui/button';
@@ -44,6 +45,7 @@ export function TransactionList({
           <TableHeader>
             <TableRow>
               <TableHead>Description</TableHead>
+              <TableHead>Category</TableHead>
               <TableHead>Date</TableHead>
               <TableHead className="text-right">Amount</TableHead>
               <TableHead className="w-[120px] text-right">Actions</TableHead>
@@ -53,6 +55,9 @@ export function TransactionList({
             {transactions.map((transaction) => (
               <TableRow key={transaction._id}>
                 <TableCell className="font-medium">{transaction.description}</TableCell>
+                <TableCell>
+                  <Badge variant="outline">{transaction.category || 'Other'}</Badge>
+                </TableCell>
                 <TableCell>{formatDate(transaction.date)}</TableCell>
                 <TableCell className={cn("text-right font-medium", getAmountColor(transaction.amount))}>
                   {formatCurrency(transaction.amount)}

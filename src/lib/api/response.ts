@@ -199,6 +199,20 @@ export class ValidationHelper {
     return true;
   }
 
+  // Validate if a value is one of the allowed values
+  isIn(value: any, allowedValues: readonly any[], field: string): boolean {
+    if (!allowedValues.includes(value)) {
+      this.addError(
+        field,
+        `${field} must be one of the following values: ${allowedValues.join(
+          ', '
+        )}`
+      );
+      return false;
+    }
+    return true;
+  }
+
   // Validate MongoDB ObjectId format
   isValidObjectId(value: any, field: string): boolean {
     const objectIdRegex = /^[0-9a-fA-F]{24}$/;

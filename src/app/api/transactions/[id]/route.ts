@@ -18,6 +18,7 @@ import {
   UpdateTransactionRequest,
   TransactionDocument,
 } from '@/types/transaction';
+import { TRANSACTION_CATEGORIES } from '@/lib/constants/categories';
 
 // PUT /api/transactions/[id] - Update transaction
 export async function PUT(
@@ -46,7 +47,7 @@ export async function PUT(
     const updateValidator = new ValidationHelper();
 
     // At least one field must be provided for update
-    if (!body.amount && !body.date && !body.description) {
+    if (!body.amount && !body.date && !body.description && !body.category) {
       updateValidator.addError(
         'body',
         'At least one field must be provided for update'
@@ -64,6 +65,10 @@ export async function PUT(
 
     if (body.description !== undefined) {
       updateValidator.isString(body.description, 'description', 1, 500);
+    }
+
+    if (body.category !== undefined) {
+      updateValidator.isIn(body.category, TRANSACTION_CATEGORIES, 'category');
     }
 
     // Return validation errors if any
@@ -96,6 +101,10 @@ export async function PUT(
 
     if (body.description !== undefined) {
       updateDoc.description = body.description.trim();
+    }
+
+    if (body.category !== undefined) {
+      updateDoc.category = body.category;
     }
 
     // Update transaction

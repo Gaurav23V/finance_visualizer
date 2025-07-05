@@ -4,7 +4,11 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { useTransactions } from '@/hooks/useTransactions';
 import { ChartCard } from '@/app/components/charts/ChartCard';
 import { MonthlyExpensesChart } from '@/app/components/charts/MonthlyExpensesChart';
-import { getMonthlySummary } from '@/lib/utils/analytics';
+import { CategoryPieChart } from '@/app/components/charts/CategoryPieChart';
+import {
+  getMonthlySummary,
+  aggregateExpensesByCategory,
+} from '@/lib/utils/analytics';
 import { formatCurrency } from '@/lib/utils/format';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -24,6 +28,7 @@ export default function DashboardPage() {
   } = useTransactions();
 
   const monthlySummary = getMonthlySummary(transactions);
+  const categoryData = aggregateExpensesByCategory(transactions);
 
   const handleRetry = () => {
     refetchAnalytics();
@@ -71,7 +76,7 @@ export default function DashboardPage() {
         </ChartCard>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-8 grid gap-8 md:grid-cols-2">
         <ChartCard
           title="Monthly Expenses"
           description="A month-over-month view of your spending."
@@ -80,6 +85,15 @@ export default function DashboardPage() {
           onRetry={refetchAnalytics}
         >
           <MonthlyExpensesChart data={analyticsData} />
+        </ChartCard>
+        <ChartCard
+          title="Expense Categories"
+          description="A breakdown of your spending by category."
+          isLoading={isTransactionsLoading}
+          error={transactionsError}
+          onRetry={refetchTransactions}
+        >
+          <CategoryPieChart data={categoryData} />
         </ChartCard>
       </div>
       <div className="mt-8 text-center">
