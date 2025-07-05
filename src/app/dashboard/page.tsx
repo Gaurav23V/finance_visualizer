@@ -9,6 +9,8 @@ import { formatCurrency } from '@/lib/utils/format';
 import { Button } from '@/components/ui/button';
 import { CategoryBreakdownCard } from '@/app/components/dashboard/CategoryBreakdownCard';
 import { RecentTransactionsCard } from '@/app/components/dashboard/RecentTransactionsCard';
+import { BudgetStatus } from '../components/BudgetStatus';
+import Link from 'next/link';
 // import { RecentTransactionsCard } from '@/app/components/dashboard/RecentTransactionsCard';
 
 export type Period = 'this_month' | 'last_month' | 'last_3_months';
@@ -21,6 +23,7 @@ export default function DashboardPage() {
     totalIncome: 0,
     totalExpenses: 0,
     net: 0,
+    totalBudgeted: 0,
   };
   const categoryData = data?.categoryBreakdown || [];
   const monthlyChartData = data?.monthlyChartData || [];
@@ -90,6 +93,25 @@ export default function DashboardPage() {
           </div>
         </ChartCard>
       </div>
+
+      {period === 'this_month' && (
+        <div className='mt-8'>
+            <ChartCard
+                title="Budget Status"
+                description="Your spending versus your budget for this month."
+                isLoading={isLoading}
+                error={error}
+                onRetry={refetch}
+                footer={
+                    <Button asChild variant="outline" size="sm">
+                        <Link href="/budgets">Manage Budgets</Link>
+                    </Button>
+                }
+            >
+                <BudgetStatus spent={monthlySummary.totalExpenses} total={monthlySummary.totalBudgeted || 0} />
+            </ChartCard>
+        </div>
+      )}
 
       {/* Middle Row: Monthly Chart and Category Breakdown */}
       <div className='mt-8 grid gap-8 lg:grid-cols-5'>

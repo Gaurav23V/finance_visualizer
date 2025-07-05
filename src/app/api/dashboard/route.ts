@@ -1,5 +1,8 @@
 import { NextRequest } from 'next/server';
-import { getTransactionsCollection } from '@/lib/db/mongodb';
+import {
+  getTransactionsCollection,
+  getBudgetsCollection,
+} from '@/lib/db/mongodb';
 import { successResponse, databaseErrorResponse } from '@/lib/api/response';
 import { formatTransactionResponse } from '@/lib/api/formatters';
 import { startOfMonth, endOfMonth, subMonths } from 'date-fns';
@@ -131,6 +134,18 @@ export async function GET(request: NextRequest) {
       ])
       .next();
 
+    // Fetch budget data for 'this_month' period
+    let totalBudgeted = 0;
+    if (period === 'this_month') {
+      const budgetsCollection = await getBudgetsCollection();
+      const now = new Date();
+      const budgets = await budgetsCollection.find({
+        month: now.getMonth() + 1,
+        year: now.getFullYear(),
+      }).toArray();
+      totalBudgeted = budgets.reduce((sum, b) => sum + b.amount, 0);
+    }
+
     // Add percentages to category breakdown
     const totalExpenses = dashboardData?.monthlySummary?.totalExpenses || 1;
     if (dashboardData && dashboardData.categoryBreakdown) {
@@ -149,9 +164,13 @@ export async function GET(request: NextRequest) {
     }
 
     const defaultSummary = { totalIncome: 0, totalExpenses: 0, net: 0 };
+    const summary = dashboardData?.monthlySummary || defaultSummary;
 
     return successResponse({
-      monthlySummary: dashboardData?.monthlySummary || defaultSummary,
+      monthlySummary: {
+        ...summary,
+        totalBudgeted,
+      },
       categoryBreakdown: dashboardData?.categoryBreakdown || [],
       monthlyChartData: dashboardData?.monthlyChartData || [],
       recentTransactions: dashboardData?.recentTransactions || [],

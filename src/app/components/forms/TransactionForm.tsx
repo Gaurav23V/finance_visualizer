@@ -40,6 +40,11 @@ import {
   TRANSACTION_CATEGORIES,
   TransactionCategory,
 } from '@/lib/constants/categories';
+import { fetchBudgets } from '@/lib/api/budgets';
+import { Budget } from '@/types/budget';
+import { calculateBudgetVsActual } from '@/lib/utils/budget';
+import { fetchTransactions } from '@/lib/api/transactions';
+import { formatCurrency } from '@/lib/utils/format';
 
 const formSchema = z.object({
   amount: z.coerce
@@ -78,6 +83,22 @@ export function TransactionForm({
   initialData,
   isSubmitting = false,
 }: TransactionFormProps) {
+  const [budgets, setBudgets] = React.useState<Budget[]>([]);
+  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+
+  React.useEffect(() => {
+    async function loadBudgets() {
+      // For simplicity, fetching all budgets. In a real app, this could be optimized.
+      const now = new Date();
+      const budgetData = await fetchBudgets(now.getMonth() + 1, now.getFullYear());
+      setBudgets(budgetData);
+
+      const transactionData = await fetchTransactions({month: now.getMonth() + 1, year: now.getFullYear()});
+      setTransactions(transactionData);
+    }
+    loadBudgets();
+  }, []);
+
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -94,6 +115,19 @@ export function TransactionForm({
   });
 
   const transactionType = form.watch('type');
+  const selectedCategory = form.watch('category');
+  const selectedDate = form.watch('date');
+  const currentAmount = form.watch('amount');
+  
+  const budgetInfo = React.useMemo(() => {
+    if (!selectedCategory || !selectedDate || !budgets.length) return null;
+
+    const budget = budgets.find(b => b.category === selectedCategory && b.month === selectedDate.getMonth() + 1 && b.year === selectedDate.getFullYear());
+    if (!budget) return { budget: null, summary: null };
+
+    const summary = calculateBudgetVsActual([budget], transactions);
+    return { budget, summary: summary[0] };
+  }, [selectedCategory, selectedDate, budgets, transactions]);
 
   React.useEffect(() => {
     if (initialData) return; // Don't reset category if editing
@@ -122,6 +156,8 @@ export function TransactionForm({
     transactionType === 'income'
       ? TRANSACTION_CATEGORIES.filter(c => c === 'Income/Salary')
       : TRANSACTION_CATEGORIES.filter(c => c !== 'Income/Salary');
+
+  const willExceedBudget = budgetInfo?.summary && currentAmount ? (budgetInfo.summary.spent + currentAmount) > budgetInfo.summary.amount : false;
 
   return (
     <Form {...form}>
@@ -209,6 +245,16 @@ export function TransactionForm({
             </FormItem>
           )}
         />
+
+        {budgetInfo && budgetInfo.budget && (
+          <div className="p-3 bg-secondary rounded-lg text-sm">
+            <p>Budget for {selectedCategory}: {formatCurrency(budgetInfo.budget.amount)}</p>
+            <p>Spent so far: {formatCurrency(budgetInfo.summary?.spent || 0)}</p>
+            {willExceedBudget && (
+              <p className="text-red-500 font-semibold mt-1">Warning: This transaction will exceed your budget for this category.</p>
+            )}
+          </div>
+        )}
 
         <FormField
           control={form.control}

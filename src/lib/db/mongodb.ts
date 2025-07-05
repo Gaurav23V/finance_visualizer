@@ -1,5 +1,6 @@
 import { MongoClient, Db, Collection } from 'mongodb';
 import { TransactionDocument } from '@/types/transaction';
+import { BudgetDocument } from '@/types/budget';
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
@@ -74,6 +75,19 @@ export async function getTransactionsCollection(): Promise<
   }
 }
 
+// Get budgets collection
+export async function getBudgetsCollection(): Promise<
+  Collection<BudgetDocument>
+> {
+  try {
+    const db = await getDatabase();
+    return db.collection<BudgetDocument>('budgets');
+  } catch (error) {
+    console.error('Failed to get budgets collection:', error);
+    throw new Error('Collection access failed');
+  }
+}
+
 // Test database connection
 export async function testConnection(): Promise<boolean> {
   try {
@@ -127,13 +141,22 @@ export async function getDatabaseHealth(): Promise<{
 // Initialize database indexes for better performance
 export async function initializeDatabase(): Promise<void> {
   try {
-    const collection = await getTransactionsCollection();
+    const transactionsCollection = await getTransactionsCollection();
+    const budgetsCollection = await getBudgetsCollection();
 
-    // Create indexes for better query performance
-    await collection.createIndex({ date: -1 }); // Sort by date descending
-    await collection.createIndex({ amount: 1 }); // Filter by amount
-    await collection.createIndex({ createdAt: -1 }); // Sort by creation date
-    await collection.createIndex({ description: 'text' }); // Text search on description
+    // Create indexes for better query performance on transactions
+    await transactionsCollection.createIndex({ date: -1 }); // Sort by date descending
+    await transactionsCollection.createIndex({ amount: 1 }); // Filter by amount
+    await transactionsCollection.createIndex({ createdAt: -1 }); // Sort by creation date
+    await transactionsCollection.createIndex({ description: 'text' }); // Text search on description
+
+    // Create indexes for better query performance on budgets
+    await budgetsCollection.createIndex({ year: 1, month: 1 }); // Filter by year and month
+    await budgetsCollection.createIndex({ category: 1 }); // Filter by category
+    await budgetsCollection.createIndex(
+      { year: 1, month: 1, category: 1 },
+      { unique: true }
+    ); // Unique compound index
 
     console.log('Database indexes created successfully');
   } catch (error) {

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Toaster } from '@/components/ui/toaster';
 import { Geist_Mono } from 'next/font/google';
 import { Geist } from 'next/font/google';
 import './globals.css';
@@ -32,6 +33,7 @@ export default function RootLayout({
     { href: '/', label: 'Home' },
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/transactions', label: 'Transactions' },
+    { href: '/budgets', label: 'Budgets' },
   ];
 
   return (
@@ -105,6 +107,7 @@ export default function RootLayout({
           <main className='flex-1'>
             <div className='container mx-auto px-4 py-6'>{children}</div>
           </main>
+          <Toaster />
         </div>
       </body>
     </html>

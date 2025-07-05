@@ -10,6 +10,7 @@ export interface DashboardData {
     totalIncome: number;
     totalExpenses: number;
     net: number;
+    totalBudgeted?: number;
   };
   categoryBreakdown: (CategoryAggregation & { percentage: number })[];
   monthlyChartData: MonthlyAggregation[];
