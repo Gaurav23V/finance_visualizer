@@ -1,8 +1,14 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+'use client';
+
+import * as React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Geist_Mono } from 'next/font/google';
+import { Geist } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -14,137 +20,92 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: 'Finance Visualizer',
-    template: '%s | Finance Visualizer',
-  },
-  description:
-    'A comprehensive personal finance tracking and visualization application',
-  keywords: [
-    'finance',
-    'budget',
-    'tracking',
-    'visualization',
-    'personal finance',
-    'money management',
-    'expenses',
-    'income',
-  ],
-  authors: [{ name: 'Finance Visualizer Team' }],
-  creator: 'Finance Visualizer',
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://finance-visualizer.com',
-    title: 'Finance Visualizer',
-    description: 'Track and visualize your personal finances with ease',
-    siteName: 'Finance Visualizer',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Finance Visualizer',
-    description: 'Track and visualize your personal finances with ease',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const pathname = usePathname();
+
+  const navLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/transactions', label: 'Transactions' },
+  ];
+
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang='en' className='dark' suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='system'
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className='relative flex min-h-screen flex-col'>
-            <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
-              <div className='container flex h-14 items-center'>
-                <div className='mr-4 hidden md:flex'>
-                  <a className='mr-6 flex items-center space-x-2' href='/'>
-                    <span className='hidden font-bold sm:inline-block'>
-                      Finance Visualizer
-                    </span>
-                  </a>
-                  <nav className='flex items-center space-x-6 text-sm font-medium'>
-                    <a
-                      className='transition-colors hover:text-foreground/80 text-foreground/60'
-                      href='/dashboard'
+        <div className='relative flex min-h-screen flex-col'>
+          <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+            <div className='container flex h-14 items-center'>
+              <div className='mr-4 hidden md:flex'>
+                <Link className='mr-6 flex items-center space-x-2' href='/'>
+                  <span className='hidden font-bold sm:inline-block'>
+                    Finance Visualizer
+                  </span>
+                </Link>
+                <nav className='flex items-center space-x-6 text-sm font-medium'>
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={cn(
+                        'transition-colors hover:text-foreground/80',
+                        pathname === link.href
+                          ? 'text-foreground'
+                          : 'text-foreground/60'
+                      )}
                     >
-                      Dashboard
-                    </a>
-                    <a
-                      className='transition-colors hover:text-foreground/80 text-foreground/60'
-                      href='/transactions'
-                    >
-                      Transactions
-                    </a>
-                    <a
-                      className='transition-colors hover:text-foreground/80 text-foreground/60'
-                      href='/analytics'
-                    >
-                      Analytics
-                    </a>
-                    <a
-                      className='transition-colors hover:text-foreground/80 text-foreground/60'
-                      href='/budget'
-                    >
-                      Budget
-                    </a>
+                      {link.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              <div className='flex flex-1 items-center justify-end space-x-2 md:hidden'>
+                  <Button
+                      variant='ghost'
+                      size='icon'
+                      onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  >
+                      {isMenuOpen ? <X /> : <Menu />}
+                      <span className='sr-only'>Toggle Menu</span>
+                  </Button>
+              </div>
+
+              <div className='hidden flex-1 items-center justify-end space-x-2 md:flex'></div>
+
+              {isMenuOpen && (
+                <div className='absolute top-14 left-0 w-full bg-background/95 backdrop-blur md:hidden'>
+                  <nav className='flex flex-col items-center space-y-4 py-4'>
+                    {navLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={cn(
+                          'w-full text-center transition-colors hover:text-foreground/80',
+                          pathname === link.href
+                            ? 'text-foreground'
+                            : 'text-foreground/60'
+                        )}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
                   </nav>
                 </div>
-                <div className='flex flex-1 items-center justify-between space-x-2 md:justify-end'>
-                  <div className='w-full flex-1 md:w-auto md:flex-none'>
-                    {/* Search component placeholder */}
-                  </div>
-                  <nav className='flex items-center'>
-                    <ThemeToggle />
-                  </nav>
-                </div>
-              </div>
-            </header>
-            <main className='flex-1'>
-              <div className='container mx-auto px-4 py-6'>{children}</div>
-            </main>
-            <footer className='border-t py-6 md:py-0'>
-              <div className='container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row'>
-                <div className='flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0'>
-                  <p className='text-center text-sm leading-loose text-muted-foreground md:text-left'>
-                    Built with Next.js, TypeScript, and Tailwind CSS.
-                  </p>
-                </div>
-                <div className='flex items-center space-x-4'>
-                  <p className='text-sm text-muted-foreground'>
-                    © 2024 Finance Visualizer. All rights reserved.
-                  </p>
-                </div>
-              </div>
-            </footer>
-          </div>
-        </ThemeProvider>
+              )}
+            </div>
+          </header>
+          <main className='flex-1'>
+            <div className='container mx-auto px-4 py-6'>{children}</div>
+          </main>
+        </div>
       </body>
     </html>
   );
