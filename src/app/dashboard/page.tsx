@@ -96,20 +96,23 @@ export default function DashboardPage() {
 
       {period === 'this_month' && (
         <div className='mt-8'>
-            <ChartCard
-                title="Budget Status"
-                description="Your spending versus your budget for this month."
-                isLoading={isLoading}
-                error={error}
-                onRetry={refetch}
-                footer={
-                    <Button asChild variant="outline" size="sm">
-                        <Link href="/budgets">Manage Budgets</Link>
-                    </Button>
-                }
-            >
-                <BudgetStatus spent={monthlySummary.totalExpenses} total={monthlySummary.totalBudgeted || 0} />
-            </ChartCard>
+          <ChartCard
+            title='Budget Status'
+            description='Your spending versus your budget for this month.'
+            isLoading={isLoading}
+            error={error}
+            onRetry={refetch}
+            footer={
+              <Button asChild variant='outline' size='sm'>
+                <Link href='/budgets'>Manage Budgets</Link>
+              </Button>
+            }
+          >
+            <BudgetStatus
+              spent={monthlySummary.totalExpenses}
+              total={monthlySummary.totalBudgeted || 0}
+            />
+          </ChartCard>
         </div>
       )}
 

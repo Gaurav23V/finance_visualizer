@@ -36,4 +36,4 @@ export interface BudgetsResponse {
   success: boolean;
   data?: Budget[];
   error?: string;
-} 
+}

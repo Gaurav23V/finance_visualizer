@@ -18,4 +18,4 @@ export const BudgetListSkeleton = ({ count = 6 }: BudgetListSkeletonProps) => {
   );
 };
 
-export default BudgetListSkeleton; 
+export default BudgetListSkeleton;

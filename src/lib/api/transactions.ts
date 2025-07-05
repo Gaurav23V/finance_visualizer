@@ -24,10 +24,14 @@ export async function fetchTransactions({
   month,
   year,
 }: FetchTransactionsParams): Promise<Transaction[]> {
-    const startDate = new Date(year, month - 1, 1).toISOString();
-    const endDate = new Date(year, month, 0).toISOString();
-    
-    const response = await fetch(`${API_BASE_URL}?dateFrom=${startDate}&dateTo=${endDate}&limit=1000`);
-    const result = await handleResponse<{ transactions: Transaction[] }>(response);
-    return result.transactions;
-} 
+  const startDate = new Date(year, month - 1, 1).toISOString();
+  const endDate = new Date(year, month, 0).toISOString();
+
+  const response = await fetch(
+    `${API_BASE_URL}?dateFrom=${startDate}&dateTo=${endDate}&limit=1000`
+  );
+  const result = await handleResponse<{ transactions: Transaction[] }>(
+    response
+  );
+  return result.transactions;
+}

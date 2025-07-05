@@ -139,10 +139,12 @@ export async function GET(request: NextRequest) {
     if (period === 'this_month') {
       const budgetsCollection = await getBudgetsCollection();
       const now = new Date();
-      const budgets = await budgetsCollection.find({
-        month: now.getMonth() + 1,
-        year: now.getFullYear(),
-      }).toArray();
+      const budgets = await budgetsCollection
+        .find({
+          month: now.getMonth() + 1,
+          year: now.getFullYear(),
+        })
+        .toArray();
       totalBudgeted = budgets.reduce((sum, b) => sum + b.amount, 0);
     }
 

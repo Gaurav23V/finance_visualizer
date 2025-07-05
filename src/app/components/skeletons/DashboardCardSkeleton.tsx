@@ -8,7 +8,9 @@ interface DashboardCardSkeletonProps {
  * Skeleton placeholder for dashboard summary cards. Shows a grid of card-sized
  * blocks so the user can anticipate the layout and content while data loads.
  */
-export const DashboardCardSkeleton = ({ count = 3 }: DashboardCardSkeletonProps) => {
+export const DashboardCardSkeleton = ({
+  count = 3,
+}: DashboardCardSkeletonProps) => {
   return (
     <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
       {Array.from({ length: count }).map((_, idx) => (
@@ -18,4 +20,4 @@ export const DashboardCardSkeleton = ({ count = 3 }: DashboardCardSkeletonProps)
   );
 };
 
-export default DashboardCardSkeleton; 
+export default DashboardCardSkeleton;

@@ -16,7 +16,10 @@ async function handleResponse<T>(response: Response): Promise<T> {
  * @param year - The year
  * @returns A promise that resolves to an array of budgets.
  */
-export async function fetchBudgets(month: number, year: number): Promise<Budget[]> {
+export async function fetchBudgets(
+  month: number,
+  year: number
+): Promise<Budget[]> {
   const response = await fetch(`${API_BASE_URL}?month=${month}&year=${year}`);
   return handleResponse<Budget[]>(response);
 }
@@ -26,7 +29,9 @@ export async function fetchBudgets(month: number, year: number): Promise<Budget[
  * @param data - The budget data.
  * @returns A promise that resolves to the created or updated budget.
  */
-export async function createOrUpdateBudget(data: CreateBudgetRequest): Promise<Budget> {
+export async function createOrUpdateBudget(
+  data: CreateBudgetRequest
+): Promise<Budget> {
   const response = await fetch(API_BASE_URL, {
     method: 'POST',
     headers: {
@@ -47,4 +52,4 @@ export async function deleteBudget(id: string): Promise<void> {
     method: 'DELETE',
   });
   await handleResponse(response);
-} 
+}

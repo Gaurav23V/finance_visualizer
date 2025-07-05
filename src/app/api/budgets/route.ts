@@ -11,7 +11,7 @@ import {
   errorResponse,
 } from '@/lib/api/response';
 import { formatBudgetResponse } from '@/lib/api/formatters';
-import { CreateBudgetRequest, BudgetDocument } from '@/types/budget';
+import { CreateBudgetRequest } from '@/types/budget';
 import { TRANSACTION_CATEGORIES } from '@/lib/constants/categories';
 
 // GET /api/budgets - Get all budgets with optional filtering
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (year < 2000 || year > 2100) {
-        validator.addError('year', 'Year must be between 2000 and 2100');
+      validator.addError('year', 'Year must be between 2000 and 2100');
     }
 
     if (validator.hasErrors()) {
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     if (validator.hasErrors()) {
       return validationErrorResponse(validator.getErrors());
     }
-    
+
     // Further validation
     validator.isIn(body.category, TRANSACTION_CATEGORIES, 'category');
     validator.isNumber(body.amount, 'amount');
@@ -134,18 +134,16 @@ export async function POST(request: NextRequest) {
       year: body.year,
     };
 
-    const update: Omit<BudgetDocument, '_id'> = {
-      ...filter,
-      amount: body.amount,
-      updatedAt: now,
-      createdAt: now, // Will be set on insert, ignored on update
-    };
-
     const result = await collection.updateOne(
       filter,
-      { 
+      {
         $set: { amount: body.amount, updatedAt: now },
-        $setOnInsert: { createdAt: now, category: body.category, month: body.month, year: body.year }
+        $setOnInsert: {
+          createdAt: now,
+          category: body.category,
+          month: body.month,
+          year: body.year,
+        },
       },
       { upsert: true }
     );
@@ -153,28 +151,27 @@ export async function POST(request: NextRequest) {
     if (!result.upsertedId && result.matchedCount === 0) {
       return databaseErrorResponse('Failed to create or update budget');
     }
-    
-    const budgetId = result.upsertedId ? result.upsertedId : (await collection.findOne(filter))?._id;
+
+    const budgetId = result.upsertedId
+      ? result.upsertedId
+      : (await collection.findOne(filter))?._id;
 
     if (!budgetId) {
-        return databaseErrorResponse(
-            'Budget created/updated but could not be retrieved'
-        );
+      return databaseErrorResponse(
+        'Budget created/updated but could not be retrieved'
+      );
     }
 
     const budget = await collection.findOne({ _id: budgetId });
 
-    const httpStatus = result.upsertedId
-      ? HTTP_STATUS.CREATED
-      : HTTP_STATUS.OK;
+    const httpStatus = result.upsertedId ? HTTP_STATUS.CREATED : HTTP_STATUS.OK;
     const message = result.upsertedId
       ? 'Budget created successfully'
       : 'Budget updated successfully';
 
     return successResponse(formatBudgetResponse(budget), httpStatus, message);
-
   } catch (error) {
     console.error('Error creating/updating budget:', error);
     return databaseErrorResponse('Failed to create or update budget');
   }
-} 
+}

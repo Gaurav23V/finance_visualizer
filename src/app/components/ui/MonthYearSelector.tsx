@@ -20,8 +20,18 @@ interface MonthYearSelectorProps {
 }
 
 const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 export function MonthYearSelector({
@@ -50,13 +60,10 @@ export function MonthYearSelector({
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      <Select
-        value={month.toString()}
-        onValueChange={handleMonthChange}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select Month" />
+    <div className='flex items-center space-x-2'>
+      <Select value={month.toString()} onValueChange={handleMonthChange}>
+        <SelectTrigger className='w-[180px]'>
+          <SelectValue placeholder='Select Month' />
         </SelectTrigger>
         <SelectContent>
           {MONTHS.map((name, index) => (
@@ -67,12 +74,9 @@ export function MonthYearSelector({
         </SelectContent>
       </Select>
 
-      <Select
-        value={year.toString()}
-        onValueChange={handleYearChange}
-      >
-        <SelectTrigger className="w-[120px]">
-          <SelectValue placeholder="Select Year" />
+      <Select value={year.toString()} onValueChange={handleYearChange}>
+        <SelectTrigger className='w-[120px]'>
+          <SelectValue placeholder='Select Year' />
         </SelectTrigger>
         <SelectContent>
           {years.map(y => (
@@ -84,4 +88,4 @@ export function MonthYearSelector({
       </Select>
     </div>
   );
-} 
+}

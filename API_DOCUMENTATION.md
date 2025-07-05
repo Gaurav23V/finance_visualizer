@@ -17,6 +17,7 @@ Currently, the API does not require authentication. This will be added in future
 All API responses follow a consistent format:
 
 ### Success Response
+
 ```json
 {
   "success": true,
@@ -26,6 +27,7 @@ All API responses follow a consistent format:
 ```
 
 ### Error Response
+
 ```json
 {
   "success": false,
@@ -44,6 +46,7 @@ All API responses follow a consistent format:
 Check the system and database health status.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -71,26 +74,29 @@ Check the system and database health status.
 Create a new transaction.
 
 **Request Body:**
+
 ```json
 {
-  "amount": 100.50,
+  "amount": 100.5,
   "date": "2024-01-01T00:00:00.000Z",
   "description": "Grocery shopping"
 }
 ```
 
 **Validation Rules:**
+
 - `amount`: Required, must be a number (positive for income, negative for expenses)
 - `date`: Required, must be a valid date string
 - `description`: Required, string between 1-500 characters
 
 **Response:**
+
 ```json
 {
   "success": true,
   "data": {
     "_id": "60f7b3b3b3b3b3b3b3b3b3b3",
-    "amount": 100.50,
+    "amount": 100.5,
     "date": "2024-01-01T00:00:00.000Z",
     "description": "Grocery shopping",
     "createdAt": "2024-01-01T00:00:00.000Z",
@@ -105,6 +111,7 @@ Create a new transaction.
 Get all transactions with optional filtering and pagination.
 
 **Query Parameters:**
+
 - `limit`: Number of transactions to return (default: 50, max: 100)
 - `skip`: Number of transactions to skip for pagination (default: 0)
 - `sortBy`: Field to sort by (`date`, `amount`, `createdAt`) (default: `date`)
@@ -115,6 +122,7 @@ Get all transactions with optional filtering and pagination.
 - `maxAmount`: Filter transactions with amount <= this value
 
 **Examples:**
+
 ```
 GET /api/transactions
 GET /api/transactions?limit=10&skip=0
@@ -123,6 +131,7 @@ GET /api/transactions?minAmount=0&sortBy=amount&sortOrder=desc
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -130,7 +139,7 @@ GET /api/transactions?minAmount=0&sortBy=amount&sortOrder=desc
     "transactions": [
       {
         "_id": "60f7b3b3b3b3b3b3b3b3b3b3",
-        "amount": 100.50,
+        "amount": 100.5,
         "date": "2024-01-01T00:00:00.000Z",
         "description": "Grocery shopping",
         "createdAt": "2024-01-01T00:00:00.000Z",
@@ -153,15 +162,17 @@ GET /api/transactions?minAmount=0&sortBy=amount&sortOrder=desc
 Get a single transaction by ID.
 
 **Path Parameters:**
+
 - `id`: MongoDB ObjectId of the transaction
 
 **Response:**
+
 ```json
 {
   "success": true,
   "data": {
     "_id": "60f7b3b3b3b3b3b3b3b3b3b3",
-    "amount": 100.50,
+    "amount": 100.5,
     "date": "2024-01-01T00:00:00.000Z",
     "description": "Grocery shopping",
     "createdAt": "2024-01-01T00:00:00.000Z",
@@ -176,9 +187,11 @@ Get a single transaction by ID.
 Update an existing transaction.
 
 **Path Parameters:**
+
 - `id`: MongoDB ObjectId of the transaction
 
 **Request Body:**
+
 ```json
 {
   "amount": 150.75,
@@ -188,11 +201,13 @@ Update an existing transaction.
 ```
 
 **Notes:**
+
 - All fields are optional, but at least one must be provided
 - Only provided fields will be updated
 - `updatedAt` timestamp is automatically set
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -213,9 +228,11 @@ Update an existing transaction.
 Delete a transaction by ID.
 
 **Path Parameters:**
+
 - `id`: MongoDB ObjectId of the transaction
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -231,29 +248,29 @@ Delete a transaction by ID.
 
 ## Error Codes
 
-| Code | Description |
-|------|-------------|
-| `VALIDATION_ERROR` | Request validation failed |
-| `NOT_FOUND` | Resource not found |
-| `DATABASE_ERROR` | Database operation failed |
-| `INVALID_ID` | Invalid MongoDB ObjectId format |
-| `MISSING_FIELDS` | Required fields are missing |
-| `INVALID_DATE` | Invalid date format |
-| `INVALID_AMOUNT` | Invalid amount value |
-| `CONNECTION_ERROR` | Database connection failed |
-| `INTERNAL_ERROR` | Internal server error |
+| Code               | Description                     |
+| ------------------ | ------------------------------- |
+| `VALIDATION_ERROR` | Request validation failed       |
+| `NOT_FOUND`        | Resource not found              |
+| `DATABASE_ERROR`   | Database operation failed       |
+| `INVALID_ID`       | Invalid MongoDB ObjectId format |
+| `MISSING_FIELDS`   | Required fields are missing     |
+| `INVALID_DATE`     | Invalid date format             |
+| `INVALID_AMOUNT`   | Invalid amount value            |
+| `CONNECTION_ERROR` | Database connection failed      |
+| `INTERNAL_ERROR`   | Internal server error           |
 
 ## HTTP Status Codes
 
-| Status | Description |
-|--------|-------------|
-| 200 | OK - Request successful |
-| 201 | Created - Resource created successfully |
-| 400 | Bad Request - Invalid request data |
-| 404 | Not Found - Resource not found |
-| 405 | Method Not Allowed - HTTP method not supported |
-| 422 | Unprocessable Entity - Validation failed |
-| 500 | Internal Server Error - Server error |
+| Status | Description                                    |
+| ------ | ---------------------------------------------- |
+| 200    | OK - Request successful                        |
+| 201    | Created - Resource created successfully        |
+| 400    | Bad Request - Invalid request data             |
+| 404    | Not Found - Resource not found                 |
+| 405    | Method Not Allowed - HTTP method not supported |
+| 422    | Unprocessable Entity - Validation failed       |
+| 500    | Internal Server Error - Server error           |
 
 ## Examples
 
@@ -308,12 +325,12 @@ Make sure your development server is running and your MongoDB connection is conf
 
 ```typescript
 interface Transaction {
-  _id: string;           // MongoDB ObjectId as string
-  amount: number;        // Positive for income, negative for expenses
-  date: Date;           // Transaction date
-  description: string;   // Transaction description
-  createdAt: Date;      // Creation timestamp
-  updatedAt: Date;      // Last update timestamp
+  _id: string; // MongoDB ObjectId as string
+  amount: number; // Positive for income, negative for expenses
+  date: Date; // Transaction date
+  description: string; // Transaction description
+  createdAt: Date; // Creation timestamp
+  updatedAt: Date; // Last update timestamp
 }
 ```
 
@@ -323,4 +340,4 @@ Currently, there are no rate limits implemented. This will be added in future ve
 
 ## CORS
 
-CORS is configured to allow requests from the Next.js frontend. Additional origins can be configured as needed. 
+CORS is configured to allow requests from the Next.js frontend. Additional origins can be configured as needed.

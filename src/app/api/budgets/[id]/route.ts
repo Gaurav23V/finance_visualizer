@@ -12,11 +12,11 @@ import {
 
 // DELETE /api/budgets/[id] - Delete a budget
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Validate ObjectId format
     const validator = new ValidationHelper();
@@ -34,13 +34,9 @@ export async function DELETE(
       return notFoundResponse('Budget not found');
     }
 
-    return successResponse(
-      null,
-      HTTP_STATUS.OK,
-      'Budget deleted successfully'
-    );
+    return successResponse(null, HTTP_STATUS.OK, 'Budget deleted successfully');
   } catch (error) {
     console.error('Error deleting budget:', error);
     return databaseErrorResponse('Failed to delete budget');
   }
-} 
+}

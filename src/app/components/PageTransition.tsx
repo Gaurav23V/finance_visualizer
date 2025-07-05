@@ -37,4 +37,4 @@ export const PageTransition = ({ children }: PageTransitionProps) => {
   );
 };
 
-export default PageTransition; 
+export default PageTransition;

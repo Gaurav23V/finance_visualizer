@@ -2,6 +2,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -15,6 +16,7 @@ interface ChartCardProps {
   error?: string | null;
   children: React.ReactNode;
   onRetry?: () => void;
+  footer?: React.ReactNode;
 }
 
 export const ChartCard = ({
@@ -24,6 +26,7 @@ export const ChartCard = ({
   error,
   children,
   onRetry,
+  footer,
 }: ChartCardProps) => {
   return (
     <Card>
@@ -40,6 +43,7 @@ export const ChartCard = ({
           children
         )}
       </CardContent>
+      {footer && <CardFooter>{footer}</CardFooter>}
     </Card>
   );
 };

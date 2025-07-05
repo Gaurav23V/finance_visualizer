@@ -1,6 +1,6 @@
 import { BudgetSummary } from '@/lib/utils/budget';
 import { Transaction } from '@/types/transaction';
-import { TRANSACTION_CATEGORIES, TransactionCategory } from '../constants/categories';
+import { TransactionCategory } from '../constants/categories';
 
 export type InsightType = 'warning' | 'success' | 'info';
 
@@ -39,28 +39,32 @@ export function generateSpendingInsights(
   }
 
   // Insight 2: Categories under budget (potential savings)
-  const underBudget = budgetSummaries.filter(b => b.remaining > 0 && b.spent > 0);
+  const underBudget = budgetSummaries.filter(
+    b => b.remaining > 0 && b.spent > 0
+  );
   if (underBudget.length > 0) {
     underBudget.forEach(b => {
-        insights.push({
-            type: 'success',
-            title: `Good Job on ${b.category}!`,
-            description: `You are under budget by ${b.remaining.toFixed(2)} for ${b.category}. Keep it up!`,
-            value: b.remaining,
-            category: b.category
-        });
-    })
+      insights.push({
+        type: 'success',
+        title: `Good Job on ${b.category}!`,
+        description: `You are under budget by ${b.remaining.toFixed(2)} for ${b.category}. Keep it up!`,
+        value: b.remaining,
+        category: b.category,
+      });
+    });
   }
-  
+
   // Insight 3: Highest spending category vs budget
   if (budgetSummaries.length > 0) {
-    const highestSpending = [...budgetSummaries].sort((a,b) => b.spent - a.spent)[0];
+    const highestSpending = [...budgetSummaries].sort(
+      (a, b) => b.spent - a.spent
+    )[0];
     insights.push({
-        type: 'info',
-        title: 'Highest Spending Category',
-        description: `Your highest spending was in the ${highestSpending.category} category, with a total of ${highestSpending.spent.toFixed(2)} spent.`,
-        value: highestSpending.spent,
-        category: highestSpending.category,
+      type: 'info',
+      title: 'Highest Spending Category',
+      description: `Your highest spending was in the ${highestSpending.category} category, with a total of ${highestSpending.spent.toFixed(2)} spent.`,
+      value: highestSpending.spent,
+      category: highestSpending.category,
     });
   }
 
@@ -79,21 +83,24 @@ export function generateSpendingInsights(
 
   // Insight 5: Categories with spending but no budget
   const budgetedCategories = budgetSummaries.map(b => b.category);
-  const spendingWithoutBudget: { [key in TransactionCategory]?: number} = {};
+  const spendingWithoutBudget: { [key in TransactionCategory]?: number } = {};
 
-  transactions.filter(t => t.amount < 0 && !budgetedCategories.includes(t.category)).forEach(t => {
-    spendingWithoutBudget[t.category] = (spendingWithoutBudget[t.category] || 0) + Math.abs(t.amount);
-  });
+  transactions
+    .filter(t => t.amount < 0 && !budgetedCategories.includes(t.category))
+    .forEach(t => {
+      spendingWithoutBudget[t.category] =
+        (spendingWithoutBudget[t.category] || 0) + Math.abs(t.amount);
+    });
 
   Object.entries(spendingWithoutBudget).forEach(([category, amount]) => {
     insights.push({
-        type: 'info',
-        title: 'Unbudgeted Spending',
-        description: `You spent ${amount.toFixed(2)} on ${category}, which is not budgeted. Consider setting a budget for it.`,
-        value: amount,
-        category: category as TransactionCategory,
+      type: 'info',
+      title: 'Unbudgeted Spending',
+      description: `You spent ${amount.toFixed(2)} on ${category}, which is not budgeted. Consider setting a budget for it.`,
+      value: amount,
+      category: category as TransactionCategory,
     });
   });
 
   return insights;
-} 
+}

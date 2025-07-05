@@ -64,7 +64,8 @@ export function calculateBudgetVsActual(
     .filter(t => t.amount < 0) // Only expenses
     .forEach(t => {
       const category = t.category;
-      spendingByCategory[category] = (spendingByCategory[category] || 0) + Math.abs(t.amount);
+      spendingByCategory[category] =
+        (spendingByCategory[category] || 0) + Math.abs(t.amount);
     });
 
   return budgets.map(budget => {
@@ -81,4 +82,4 @@ export function calculateBudgetVsActual(
       status,
     };
   });
-} 
+}

@@ -36,7 +36,6 @@ class ErrorBoundaryInner extends React.Component<
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log the error details in development for easier debugging.
     if (process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line no-console
       console.error('Uncaught application error:', error, errorInfo);
     }
   }
@@ -52,9 +51,9 @@ class ErrorBoundaryInner extends React.Component<
     if (this.state.hasError) {
       // Friendly fallback UI
       return (
-        <div className="flex h-screen w-full flex-col items-center justify-center p-4 text-center">
-          <h1 className="mb-4 text-2xl font-semibold">Something went wrong.</h1>
-          <p className="mb-6 max-w-md text-muted-foreground">
+        <div className='flex h-screen w-full flex-col items-center justify-center p-4 text-center'>
+          <h1 className='mb-4 text-2xl font-semibold'>Something went wrong.</h1>
+          <p className='mb-6 max-w-md text-muted-foreground'>
             An unexpected error occurred. Please try reloading the page. If the
             problem persists, contact support.
           </p>
@@ -70,4 +69,4 @@ class ErrorBoundaryInner extends React.Component<
 // Memoize to avoid unnecessary re-renders when used in `layout`
 export const ErrorBoundary = React.memo(ErrorBoundaryInner);
 
-export default ErrorBoundary; 
+export default ErrorBoundary;

@@ -65,16 +65,16 @@ export function BudgetForm({
   const form = useForm<BudgetFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: initialData?.amount || '',
+      amount: initialData?.amount || undefined,
       category: initialData?.category,
     },
   });
 
   React.useEffect(() => {
     form.reset({
-        amount: initialData?.amount || '',
-        category: initialData?.category,
-    })
+      amount: initialData?.amount || undefined,
+      category: initialData?.category,
+    });
   }, [initialData, form]);
 
   const handleSubmit = (values: BudgetFormValues) => {
@@ -86,22 +86,28 @@ export function BudgetForm({
   };
 
   const availableCategories = TRANSACTION_CATEGORIES.filter(
-    c => c !== 'Income/Salary' && (initialData?.category === c || !existingCategories.includes(c))
+    c =>
+      c !== 'Income/Salary' &&
+      (initialData?.category === c || !existingCategories.includes(c))
   );
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-4'>
         <FormField
           control={form.control}
-          name="category"
+          name='category'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!!initialData}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={!!initialData}
+              >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
+                    <SelectValue placeholder='Select a category' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -119,23 +125,23 @@ export function BudgetForm({
 
         <FormField
           control={form.control}
-          name="amount"
+          name='amount'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Budget Amount</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="e.g., 500" {...field} />
+                <Input type='number' placeholder='e.g., 500' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting && <LoadingSpinner className="mr-2 h-4 w-4" />}
+        <Button type='submit' disabled={isSubmitting}>
+          {isSubmitting && <LoadingSpinner className='mr-2 h-4 w-4' />}
           {initialData ? 'Update Budget' : 'Create Budget'}
         </Button>
       </form>
     </Form>
   );
-} 
+}
